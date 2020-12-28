@@ -12,4 +12,5 @@
 
 {{}}
 
+# This script was last run <time>
 <sign>

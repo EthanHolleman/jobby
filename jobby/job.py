@@ -7,16 +7,19 @@ from jobby import SBATCH_SIGNATURE
 
 class Job():
     '''Job objects represent a batch job that is to be sumbitted to
-    a workload manager, such as SLURM.
+    a workload manager, such as SLURM. Class was written
+    with primarly SLURM in mind.
     '''
     SUBMIT = 'sbatch'
 
-    def __init__(self, name, work_dir, template):
+    def __init__(self, name, work_dir, template, descrip=''):
         self.name = name
         self.work_dir = work_dir
         self.template = template
+        self.descrip = descrip
         self.logger = self._make_logger()
         self.fields = []
+        self.logger.info(f'Starting new job about which you said: {self.descrip}')
 
     def execute(self):
         '''Submits the job to the workload manager. Before doing so
@@ -128,7 +131,7 @@ class Job():
                 self.fields, keyword_dict=self.keyword_dict
                 )
             sbatch_handle.write(text)
-            self.logger.info(f'Wrote sbatch file {self._sbatch_path}')
+            self.logger.info(f'Wrote sbatch file {path}')
     
     def _save_sbatch_copy(self):
         '''Private method that saves a copy of sbatch file to the histroy
@@ -147,7 +150,7 @@ class Job():
         logger = logging.getLogger(self.name)
         logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-        '%(levelname)s\t%(asctime)s\t%(name)s\t%(message)s')
+        '%(levelname)s\t%(asctime)s\t%(message)s')
         file_handler = logging.FileHandler(str(self._log_path))
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)

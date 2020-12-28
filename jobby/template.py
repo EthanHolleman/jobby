@@ -2,8 +2,6 @@ from pathlib import Path
 import re
 from jobby import TEMPLATES_PATH
 
-# args are just going to be tuples
-
 
 class Template():
     sbatch_regex = re.compile(r'#SBATCH (.*)')

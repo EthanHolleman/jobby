@@ -11,7 +11,7 @@ class JobbyInterface(cmd2.Cmd):
     '''
     def __init__(self):
         super().__init__()
-        self.prompt = '(Jobby) '
+        self.prompt = f'{bcolors.OKBLUE}(Jobby){bcolors.ENDC} '
         self.debug = True
     
     def _print_error(self, message):
@@ -37,11 +37,12 @@ class JobbyInterface(cmd2.Cmd):
             ArgParser: Parsed arguments
         '''
         parser = argparse.ArgumentParser()
-        parser.add_argument('-t', '--template', help='Path to sbatch template')
-        parser.add_argument('-w', '--working_dir', help='Path to run job from')
-        parser.add_argument('-n', '--name', help='Name of the job')
+        parser.add_argument('-t', '--template', help='Path to sbatch template.')
+        parser.add_argument('-w', '--working_dir', help='Path to run job from.')
+        parser.add_argument('-n', '--name', help='Name of the job.', default="jobby")
         parser.add_argument('-l', '--list_templates', action="store_true", 
-                            help='List all templates stored by Jobby')
+                            help='List all templates stored by Jobby.'),
+        parser.add_argument('-d', '--descrip', default='', help='Short description of job for posterity.')
         return parser
     
     @cmd2.with_argparser(_sbatch_args())
@@ -59,7 +60,7 @@ class JobbyInterface(cmd2.Cmd):
             return 0
 
         template = Template(args.template)
-        job = Job(args.name, args.working_dir, template)
+        job = Job(args.name, args.working_dir, template, descrip=args.descrip)
         filled_fields = []
 
         try:
